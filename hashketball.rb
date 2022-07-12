@@ -127,3 +127,97 @@ def game_hash
 end
 
 # Write code here
+def num_points_scored(player)
+  player_data = find_player player, true
+  if player_data
+    get_score player_data
+  else
+    player_data = find_player player, false
+    if player_data
+      get_score player_data
+    else
+      nil
+    end
+  end
+end
+
+def shoe_size(player)
+  player_data = find_player player, true
+  if player_data
+    get_shoe_size player_data
+  else
+    player_data = find_player player, false
+    if player_data
+      get_shoe_size player_data
+    else
+      nil
+    end
+  end
+end
+
+def team_colors(team)
+  (game_hash[:home][:team_name] == team) ? game_hash[:home][:colors] : (game_hash[:away][:colors])
+end
+
+def team_names
+  game_hash.map do |key, _|
+    game_hash[key][:team_name]
+  end
+end
+
+def player_numbers(team)
+  side = find_team_side team
+  game_hash[side][:players].map { |player| player[:number] }
+end
+
+def player_stats(player)
+  find_player(player, true) ? find_player(player, true) : find_player(player, false)
+end
+
+def big_shoe_rebounds
+  biggest_shoe[:rebounds]
+end
+
+def biggest_shoe
+  large = 0
+  player_name = ""
+  game_hash.each do |key,value|
+    value[:players].each do |player|
+      if player[:shoe] > large
+        player_name = player[:player_name]
+        large = player[:shoe]
+      end
+    end
+  end
+
+  if find_player(player_name, true)
+    find_player(player_name, true)
+  else
+    find_player(player_name, false)
+  end
+
+end
+
+def find_player(player, home)
+  if home
+    game_hash[:home][:players].find do |element|
+      element[:player_name] == player
+    end
+  else
+    game_hash[:away][:players].find do |element|
+      element[:player_name] == player
+    end
+  end
+end
+
+def find_team_side(team)
+  game_hash[:home][:team_name] == team ? :home : :away
+end
+
+def get_score(player)
+  player[:points]
+end
+
+def get_shoe_size(player)
+  player[:shoe]
+end
